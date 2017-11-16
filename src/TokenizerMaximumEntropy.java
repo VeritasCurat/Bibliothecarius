@@ -13,7 +13,7 @@ public class TokenizerMaximumEntropy {
    
    public static String[] tokenize(String eingabe) throws IOException{
 	      //Loading the Tokenizer model 
-		   InputStream inputStream = new FileInputStream("source/en-token.bin");
+		   InputStream inputStream = new FileInputStream("./src/source/en-token.bin");
 		   TokenizerModel tokenModel = new TokenizerModel(inputStream); 
 		    
 		   //Instantiating the TokenizerME class 
