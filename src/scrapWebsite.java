@@ -3,7 +3,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+
 import com.sun.xml.internal.txw2.Document;
+ 
  
 
 public class scrapWebsite {
@@ -26,7 +30,7 @@ public class scrapWebsite {
 		ArrayList<String> results = new ArrayList<>();
 		//link für autor finden
 			String search_1 = "https://www.goodreads.com/search?page=1&query="+autor+"&tab=books&utf8=%E2%9C%93";
-			Document doc =  Jsoup.connect(search_1 + URLEncoder.encode(search_1, "UTF-8")).get();
+			org.jsoup.nodes.Document doc =  Jsoup.connect(search_1 + URLEncoder.encode(search_1, "UTF-8")).get();
 				//System.out.println(doc.html());
 				//TODO: funzt whrsch nicht immer
 			String linkAutor = doc.html().substring(doc.html().indexOf("www.goodreads.com/author/show/")+30, doc.html().indexOf("\"", doc.html().indexOf("/www.goodreads.com/author/show/")));
@@ -47,12 +51,12 @@ public class scrapWebsite {
 		return results;
 	}
 	
-	public static ArrayList<String> ähnlicheBücher(String title) throws UnsupportedEncodingException, IOException{
+	public static ArrayList<String> ähnlicheBuecher(String title) throws UnsupportedEncodingException, IOException{
 		ArrayList<String> results = new ArrayList<>();
 
 		//finde link zu buch ~ rufe dafür 1 ergebnis 
 			String search_1 = "https://www.goodreads.com/search?page=1&query="+title+"&tab=books&utf8=%E2%9C%93";
-			Document doc =  Jsoup.connect(search_1 + URLEncoder.encode(search_1, "UTF-8")).get();
+			org.jsoup.nodes.Document doc =  Jsoup.connect(search_1 + URLEncoder.encode(search_1, "UTF-8")).get();
 			org.jsoup.select.Elements first = doc.getElementsByTag("tr");
 				//System.out.println(first.html());
 			String link= "https://www.goodreads.com."+first.html().substring(first.html().indexOf("href")+6, first.html().indexOf(">", first.html().indexOf("href"))-1);
@@ -92,7 +96,7 @@ public class scrapWebsite {
 		System.out.println(search_1);
 		
 		//find number of result pages
-			Document doc =  Jsoup.connect(search_2).userAgent("bot101").get();
+			org.jsoup.nodes.Document doc =  Jsoup.connect(search_2).userAgent("bot101").get();
 			String title ="";
 			for(Element meta : doc.select("meta")) if(meta.attr("name").contains("title"))title = meta.attr("content"); //search for meta attr that contains title
 			if(title.length() > 0 && title.contains("showing") && title.contains("of"))title = title.substring(title.indexOf("showing")+10, title.indexOf("of", title.indexOf("showing"))-1);
@@ -121,7 +125,7 @@ public class scrapWebsite {
 	
 	//TODO: charakter gegeben -> welches Buch?
 	//TODO: Bücher für Themem
-	public static ArrayList<String> ThemaZuBücherliste(String thema){
+	public static ArrayList<String> ThemaZuBuecherliste(String thema){
 		return null;
 	}
 }
