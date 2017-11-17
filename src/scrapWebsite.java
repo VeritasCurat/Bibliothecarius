@@ -8,13 +8,30 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
  
  
+class Book{
+	public String title;
+	public String author;
+	public String publisher;
+	public String covertext;
+	public String blurb; //Klappentext
+	public double rating;
+	
+	public Book (String title, String author, String publisher, String blurb, double rating) {
+		this.title = title;
+		this.author = author;
+		this.publisher = publisher;
+		this.blurb = blurb;
+		this.rating = rating;
+	}
+}
 
 public class scrapWebsite {
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 		// TODO Auto-generated method stub
 
-		ThemaZuBuecherliste("");
+		infosBuecher("Metro 2033");
+		//ThemaZuBuecherliste("");
 		//autorBuecher("Tolkien");
 		//aehnlicheBuecher("Metro 2033");
 		//search_title("Metro 2033", 5);
@@ -22,8 +39,30 @@ public class scrapWebsite {
 	
 	
 	
-	public static ArrayList<String> infosBuecher(String titel){
-		return null;
+	public static Book infosBuecher(String title) throws UnsupportedEncodingException, IOException{
+		Book book;
+		//link zu buch finden
+			String search_1 = "https://www.goodreads.com/search?page=1&query="+title+"&tab=books&utf8=%E2%9C%93";
+			org.jsoup.nodes.Document doc =  Jsoup.connect(search_1).get();
+			String linkBuch = doc.getElementsByTag("tr").first().html().substring(doc.getElementsByTag("tr").first().html().indexOf("href")+6, doc.getElementsByTag("tr").first().html().indexOf(">", doc.getElementsByTag("tr").first().html().indexOf("href"))-1);
+				//System.out.println(linkBuch);
+
+		//link oeffnen und daten lesen
+		String author=""; String publisher=""; String blurb=""; double rating=0;
+		doc = Jsoup.connect("https://www.goodreads.com"+linkBuch).userAgent("bot101").get();
+			//System.out.println(doc.html());
+		title = doc.select("title").text().substring(0,doc.select("title").text().indexOf("by")-1);
+		author = doc.select("title").text().substring(doc.select("title").text().indexOf("by")+3);
+		blurb = doc.html().substring(doc.html().indexOf("span id=\"freeText")+47, doc.html().indexOf("</span>", doc.html().indexOf("span id=\"freeText"))); //TODO: show less umbruecken
+		rating = Double.parseDouble(doc.html().substring(doc.html().indexOf("ratingValue")+13, doc.html().indexOf("ratingValue")+17).toString());
+		
+		book = new Book(title, author, publisher, blurb, rating);
+			System.out.println(book.title);
+			System.out.println(book.author);
+			System.out.println(book.publisher);
+			System.out.println(book.blurb);
+			System.out.println(book.rating);		
+		return book;
 	}
 		
 	public static ArrayList<String> autorBuecher(String autor) throws UnsupportedEncodingException, IOException{
