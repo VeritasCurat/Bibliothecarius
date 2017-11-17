@@ -15,9 +15,9 @@ public class scrapWebsite {
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 		// TODO Auto-generated method stub
 //
-		autorBuecher("Tolkien");
-		//ähnlicheBücher("Metro 2033");
-		//goodReads_search_title("Metro 2033", 5);
+		//autorBuecher("Tolkien");
+		//aehnlicheBuecher("Metro 2033");
+		goodReads_search_title("Metro 2033", 5);
 	}
 	
 	
@@ -41,17 +41,17 @@ public class scrapWebsite {
 		
 		String link="";
 		for (Element result_doc : results_doc) {
-			if(!result_doc.text().contains("—"))break; //TODO: dirty fix
+			if(!result_doc.text().contains("�"))break; //TODO: dirty fix
 			
 			//TODO: link-teil furchtbar, auswahl über html string. gibt es möglichtkeit das <href>-tag des <title> tag auszuwählen??
 			if(result_doc.html().contains("href")) link = "\n link:"+result_doc.html().substring(result_doc.html().indexOf("href")+6, result_doc.html().indexOf(">", result_doc.html().indexOf("href"))-1);
-		    results.add(result_doc.text().substring(0, result_doc.text().lastIndexOf("—")+1)+link);
+		    results.add(result_doc.text().substring(0, result_doc.text().lastIndexOf("�")+1)+link);
 		}
 		for(String s: results)System.out.println(s);
 		return results;
 	}
 	
-	public static ArrayList<String> ähnlicheBuecher(String title) throws UnsupportedEncodingException, IOException{
+	public static ArrayList<String> aehnlicheBuecher(String title) throws UnsupportedEncodingException, IOException{
 		ArrayList<String> results = new ArrayList<>();
 
 		//finde link zu buch ~ rufe dafür 1 ergebnis 
@@ -67,16 +67,16 @@ public class scrapWebsite {
 						
 		//similar aufrufen
 			String similar = "https://www.goodreads.com/book/similar/"+linktext_schlecht;
-			System.out.println(similar);
+			//System.out.println(similar);
 
 			doc =  Jsoup.connect(similar).get();
-			System.out.println(doc.html());
+			//System.out.println(doc.html());
 			
 		//liste der ähnlichen bücher sammeln
 			org.jsoup.select.Elements results_doc = doc.getElementsByTag("tr");
 			for (Element result_doc : results_doc) {
 				//TODO: link-teil furchtbar, auswahl über html string. gibt es möglichtkeit das <href>-tag des <title> tag auszuwählen??
-				results.add(result_doc.text().substring(0, result_doc.text().lastIndexOf("—"))+"\n link:"+result_doc.html().substring(result_doc.html().indexOf("href")+6, result_doc.html().indexOf(">", result_doc.html().indexOf("href"))-1));
+				results.add(result_doc.text().substring(0, result_doc.text().lastIndexOf("�"))+"\n link:"+result_doc.html().substring(result_doc.html().indexOf("href")+6, result_doc.html().indexOf(">", result_doc.html().indexOf("href"))-1));
 			}		
 			for(String s: results)System.out.println(s);
 			
@@ -113,7 +113,7 @@ public class scrapWebsite {
 				org.jsoup.select.Elements results_doc = doc.getElementsByTag("tr");
 				for (Element result_doc : results_doc) {
 					//TODO: link-teil furchtbar, auswahl über html string. gibt es möglichtkeit das <href>-tag des <title> tag auszuwählen??
-					results.add(result_doc.text().substring(0, result_doc.text().lastIndexOf("—"))+"\n link:"+result_doc.html().substring(result_doc.html().indexOf("href")+6, result_doc.html().indexOf(">", result_doc.html().indexOf("href"))-1));
+					results.add(result_doc.text().substring(0, result_doc.text().lastIndexOf("�"))+"\n link:"+result_doc.html().substring(result_doc.html().indexOf("href")+6, result_doc.html().indexOf(">", result_doc.html().indexOf("href"))-1));
 				}
 				System.out.println(page+"/"+pages_number);
 			}
