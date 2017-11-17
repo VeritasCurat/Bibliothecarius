@@ -5,8 +5,7 @@ import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-
-import com.sun.xml.internal.txw2.Document;
+import org.jsoup.select.Elements;
  
  
 
@@ -14,10 +13,11 @@ public class scrapWebsite {
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 		// TODO Auto-generated method stub
-//
+
+		ThemaZuBuecherliste("");
 		//autorBuecher("Tolkien");
 		//aehnlicheBuecher("Metro 2033");
-		goodReads_search_title("Metro 2033", 5);
+		//search_title("Metro 2033", 5);
 	}
 	
 	
@@ -89,7 +89,7 @@ public class scrapWebsite {
 	 * @throws IOException 
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static ArrayList<String> goodReads_search_title(String search, int maxresultpages) throws UnsupportedEncodingException, IOException{
+	public static ArrayList<String> search_title(String search, int maxresultpages) throws UnsupportedEncodingException, IOException{
 		String search_2 = "https://www.goodreads.com/search?page=1&query="+search+"&tab=books&utf8=%E2%9C%93";
 		String search_1 = "https://www.goodreads.com/search?query="+search;
 		
@@ -124,8 +124,54 @@ public class scrapWebsite {
 	
 	
 	//TODO: charakter gegeben -> welches Buch?
+	
 	//TODO: Bücher für Themem
-	public static ArrayList<String> ThemaZuBuecherliste(String thema){
-		return null;
+	public static ArrayList<String> ThemaZuBuecherliste(String thema) throws UnsupportedEncodingException, IOException{
+		ArrayList<String> liste = new ArrayList<>();
+		
+		ArrayList<String> title = new ArrayList<>();
+		ArrayList<String> author = new ArrayList<>();
+
+		
+		String search_1 = "https://www.goodreads.com/shelf/show/"+thema;
+					
+			
+		org.jsoup.nodes.Document  doc =  Jsoup.connect(search_1).userAgent("usrdasf").get();
+		//System.out.println(doc.html());
+		
+	       
+		//TODO: selektion des docs präzisieren um 
+				org.jsoup.select.Elements results_titles = doc.select("a").select(".bookTitle");
+				
+				for (Element result_title : results_titles) {
+					//System.out.println(result_title.text());
+					
+					//TODO: link-teil furchtbar, auswahl über html string. gibt es möglichtkeit das <href>-tag des <title> tag auszuwählen??
+					title.add(result_title.text());
+				}
+				
+				org.jsoup.select.Elements results_authors = doc.select("a").select(".authorName");
+				
+				for (Element result_author : results_authors) {
+					//System.out.println(result_author.text());
+					
+					//TODO: link-teil furchtbar, auswahl über html string. gibt es möglichtkeit das <href>-tag des <title> tag auszuwählen??
+					author.add(result_author.text());
+				}
+				
+				
+				//merge //TODO: verbessern??
+				for(int i=0; i<title.size(); i++) {
+					System.out.println(title.get(i).toString() +" by "+author.get(i).toString());
+					
+					//liste.add(title.get(i)+" by "+author.get(i));
+				}
+				
+				
+				
+			
+			
+			//for(String s: liste)System.out.println(s);
+		return liste;
 	}
 }
